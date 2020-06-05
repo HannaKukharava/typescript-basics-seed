@@ -228,25 +228,166 @@ console.log(`My pizza size is ${myPizzaSize}`);
 
 
 //-------------------------------------------LESSON 5-Interfaces ------------------------------------------------
-interface Pizza {
-    name: string,
-    sizes: number[],
-    getAvaliableSizes(): number[]
+//-------------------------------------------LESSON 5-Interfaces ------------------------------------------------
+interface Sizes {
+    sizes: number[];
+}
+
+interface Pizza extends Sizes{      // extending interfaces
+    name: string;
+    toppings?: number;
+    getAvailableSizes(): void;
+    [key: number]: string          // index signature
 }
 
 let oPizza: Pizza;
 
-/**
+
 function createPizza(name: string, sizes: number[]): Pizza {
     return {
         name,       //name: name;
         sizes,
-        getAvailiableSizes() {
+        getAvailableSizes() {
             return this.sizes;
-        }
+        },
     };
 }
 
 
 oPizza = createPizza('Margarita', [1, 2, 3]);
- */
+oPizza.toppings = 2;
+console.log(oPizza);
+oPizza[5] = 'new pizza';            //giving an index to a pizza
+
+oPizza.name = 'Hawaii';
+
+console.log(oPizza);
+
+//--------------------------------------------LESSON 6 - CLASSES--------------------------------------------------
+
+class Student{
+    name: string;
+    age: number;
+    occupation: string[] = [];
+
+    constructor(name: string, age: number, private faculty: string) {
+        this.name = name;
+        this.age = age;
+    };
+
+    addNewOc(occupation: string){
+        this.occupation.push(occupation);
+    }
+
+    sortOccupations(){
+        this.occupation.sort();
+    }
+
+}
+
+
+abstract class Teacher {
+    constructor(public teacherTitle: string, protected teacherName: string) {};
+    set addNewTitle(title: string){
+        this.teacherTitle = title;
+    }
+    get teachersTitle(){
+        return this.teacherTitle;
+    }
+}
+
+class Subject extends Teacher {
+    constructor(readonly subjectName: string, teacherTitle: string, teacherName: string) {        //read-only parameter
+        super(teacherTitle, teacherName);
+    }
+
+    public updateTeacher(teacherTitle: string, teacherName: string) {
+        this.teacherName = teacherName;
+        this.teacherTitle = teacherTitle;
+    }
+}
+
+class StudyProgram{
+    constructor(public name: string, public years: number, public level: string[]) {   };
+
+    set studyLevel(level: string[]) {
+        this.level = level;
+    };
+    get studyLevel() {
+        return this.level;
+    }
+}
+
+
+const student = new Student('Jim', 22, 'fim');
+student.addNewOc( 'IM-3');
+student.addNewOc('IM-2');
+student.sortOccupations();
+console.log(student);
+
+
+//const teacher = new Teacher('Mgr.',  'Daniela Ponce');  -> abstract class
+//console.log(teacher);
+
+const subject = new Subject('TNPW1', 'Mgr.', 'Daniela Ponce');
+console.log(subject);
+subject.updateTeacher('Mgr.', 'Pikhart');
+console.log(subject);
+
+const studyProgram = new StudyProgram('IM', 3, ['bachelor', 'master']);
+console.log(studyProgram);
+console.log(studyProgram.studyLevel);                   //invoke get
+studyProgram.studyLevel = ['master', 'doctor'];         //invoke set
+console.log(studyProgram.studyLevel);
+
+
+// Example movie
+
+interface ActorsInterface{
+    playingMovieActors: string[]; // getters-setters
+}
+
+abstract class Actors implements ActorsInterface{
+    constructor(protected movieActors: string[]) {};
+
+    set playingMovieActors(movieActors: string[]){
+        this.movieActors = movieActors;
+    }
+
+    get playingMovieActors(){
+        return this.movieActors;
+    }
+}
+
+interface MovieInterface extends ActorsInterface{
+    readonly mName: string;
+    seasons: number;
+    updateMovieActors(movieActors: string[]): void;
+    addEvaluation(evaluations: number): void;
+
+}
+
+class Movie extends Actors{
+    public evaluations: number[] = [];
+    constructor(readonly mName, public seasons: number, movieActors: string[]){
+        super(movieActors);
+    }
+
+    updateMovieActors(movieActors: string[]){
+        this.movieActors = movieActors;
+    }
+
+    updateSeasonsNumber(seasons: number){
+        this.seasons = seasons;
+    }
+
+    public addEvaluation(evaluations: number){
+        this.evaluations.push(evaluations);
+    }
+}
+
+const movie = new Movie('Mentalist', 5, ['Simon Baker','Robin Tunney']);
+movie.evaluations = [7, 10, 9, 9]
+movie.updateSeasonsNumber(7);
+movie.addEvaluation(8);
+console.log(movie);
