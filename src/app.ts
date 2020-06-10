@@ -391,3 +391,15 @@ movie.evaluations = [7, 10, 9, 9]
 movie.updateSeasonsNumber(7);
 movie.addEvaluation(8);
 console.log(movie);
+
+
+class Coupon{
+    static allowed = ['Margarita', 'Pepperoni'];
+    static calculatePercent(percent: number){
+        return `PIZZA${percent}`;
+    }
+
+}
+
+console.log(Coupon.allowed);
+console.log(Coupon.calculatePercent(30));
